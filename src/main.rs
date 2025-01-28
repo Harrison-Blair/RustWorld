@@ -1,5 +1,18 @@
 use std::io;
 
+fn print_grid(grid: &Vec<Vec<&str>>) {
+    let row_str = "-+".repeat(grid[0].len());
+    for row in grid {
+        println!("+{}", row_str);
+        print!("|");
+        for cell in row {
+            print!("{}|", cell);
+        }
+        println!();
+    }
+    println!("+{}", row_str);
+}
+
 fn main() {
     println!("Hello, welcome to Rust World!");
 
@@ -14,4 +27,8 @@ fn main() {
     let height: u32 = height.trim().parse().expect("Please type a number!");
 
     println!("Width: {}, Height: {}", width, height);
+
+    let mut grid = vec![vec![" "; width as usize]; height as usize];
+
+    print_grid(&grid);
 }
