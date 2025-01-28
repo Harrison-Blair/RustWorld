@@ -1,6 +1,6 @@
 use std::io;
 
-fn print_grid(grid: &Vec<Vec<&str>>) {
+fn print_grid(grid: &Vec<Vec<char>>) {
     let row_str = "-+".repeat(grid[0].len());
     for row in grid {
         println!("+{}", row_str);
@@ -26,7 +26,7 @@ fn main() {
     io::stdin().read_line(&mut height).expect("Failed to read line");
     let height: u32 = height.trim().parse().expect("Please type a number!");
 
-    let mut grid = vec![vec![" "; width as usize]; height as usize];
+    let mut grid = vec![vec![' '; width as usize]; height as usize];
 
     print_grid(&grid);
 }
