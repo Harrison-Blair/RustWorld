@@ -26,8 +26,6 @@ fn main() {
     io::stdin().read_line(&mut height).expect("Failed to read line");
     let height: u32 = height.trim().parse().expect("Please type a number!");
 
-    println!("Width: {}, Height: {}", width, height);
-
     let mut grid = vec![vec![" "; width as usize]; height as usize];
 
     print_grid(&grid);
