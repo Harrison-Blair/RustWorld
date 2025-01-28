@@ -1,16 +1,17 @@
 use std::io;
 
 fn print_grid(grid: &Vec<Vec<char>>) {
-    let row_str = "-+".repeat(grid[0].len());
+    let row_str = "-".repeat(grid[0].len());
+    println!("+{}+", row_str);
     for row in grid {
-        println!("+{}", row_str);
         print!("|");
         for cell in row {
-            print!("{}|", cell);
+            print!("{}", cell);
         }
+        print!("|");
         println!();
     }
-    println!("+{}", row_str);
+    println!("+{}+", row_str);
 }
 
 fn main() {
