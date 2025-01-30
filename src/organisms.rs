@@ -1,26 +1,25 @@
 use rand::prelude::*;
 
-struct Herbavore {
-    symbol: char,
-    position: (usize, usize),
+pub struct Herbavore {
+    pub symbol: char,
+    pub position: (usize, usize),
 }
 
-struct Carnivore {
-    symbol: char,
-    position: (usize, usize),
-    energy: u32,
+pub struct Carnivore {
+    pub symbol: char,
+    pub position: (usize, usize),
 }
 
-trait Organism {
+pub trait Organism {
     fn get_symbol(&self) -> char;
     fn get_position(&self) -> (usize, usize);
     fn set_position(&mut self, position: (usize, usize));
 
-    fn do_turn(&mut self, grid: Vec<Vec<char>>);
+    fn do_turn(&mut self, grid: &mut Vec<Vec<char>>);
 
-    fn move_to_empty(&mut self, grid: Vec<Vec<char>>);
-    fn eat(&mut self, grid: Vec<Vec<char>>);
-    fn reproduce(&mut self, grid: Vec<Vec<char>>);
+    fn move_to_empty(&mut self, grid: &mut Vec<Vec<char>>);
+    fn eat(&mut self, grid: &mut Vec<Vec<char>>);
+    fn reproduce(&mut self, grid: &mut Vec<Vec<char>>);
 
     fn get_neighbors(&self, grid: &Vec<Vec<char>>) -> Vec<(usize, usize, char)> {
         let mut neighbors = Vec::new();
@@ -54,7 +53,7 @@ impl Organism for Herbavore {
         self.position = position;
     }
 
-    fn do_turn(&mut self, mut grid: Vec<Vec<char>>) {
+    fn do_turn(&mut self, grid: &mut Vec<Vec<char>>) {
         let neighbors = self.get_neighbors(&grid);
         let mut empty_neighbors = Vec::new();
         let mut food_neighbors = Vec::new();
@@ -79,7 +78,7 @@ impl Organism for Herbavore {
         }
     }
 
-    fn move_to_empty(&mut self, mut grid: Vec<Vec<char>>) {
+    fn move_to_empty(&mut self, grid: &mut Vec<Vec<char>>) {
         let neighbors = self.get_neighbors(&grid);
         let mut empty_neighbors = Vec::new();
         for (x, y, cell) in neighbors {
@@ -95,7 +94,7 @@ impl Organism for Herbavore {
         }
     }
 
-    fn eat(&mut self, mut grid: Vec<Vec<char>>) {
+    fn eat(&mut self, grid: &mut Vec<Vec<char>>) {
         let neighbors = self.get_neighbors(&grid);
         let mut food_neighbors = Vec::new();
         for (x, y, cell) in neighbors {
@@ -109,7 +108,7 @@ impl Organism for Herbavore {
         }
     }
 
-    fn reproduce(&mut self, mut grid: Vec<Vec<char>>) {
+    fn reproduce(&mut self, grid: &mut Vec<Vec<char>>) {
         let neighbors = self.get_neighbors(&grid);
         let mut empty_neighbors = Vec::new();
         for (x, y, cell) in neighbors {
@@ -137,7 +136,7 @@ impl Organism for Carnivore {
         self.position = position;
     }
 
-    fn do_turn(&mut self, mut grid: Vec<Vec<char>>) {
+    fn do_turn(&mut self, grid: &mut Vec<Vec<char>>) {
         let neighbors = self.get_neighbors(&grid);
         let mut empty_neighbors = Vec::new();
         let mut food_neighbors = Vec::new();
@@ -146,7 +145,7 @@ impl Organism for Carnivore {
         for (x, y, cell) in neighbors {
             if cell == ' ' {
                 empty_neighbors.push((x, y));
-            } else if cell == 'ϡ' {
+            } else if cell == 'Π' {
                 food_neighbors.push((x, y));
             } else if cell == self.symbol {
                 carnivore_neighbors.push((x, y));
@@ -160,7 +159,7 @@ impl Organism for Carnivore {
         }
     }
 
-    fn move_to_empty(&mut self, mut grid: Vec<Vec<char>>) {
+    fn move_to_empty(&mut self, grid: &mut Vec<Vec<char>>) {
         let neighbors = self.get_neighbors(&grid);
         let mut empty_neighbors = Vec::new();
         for (x, y, cell) in neighbors {
@@ -176,7 +175,7 @@ impl Organism for Carnivore {
         }
     }
 
-    fn eat(&mut self, mut grid: Vec<Vec<char>>) {
+    fn eat(&mut self, grid: &mut Vec<Vec<char>>) {
         let neighbors = self.get_neighbors(&grid);
         let mut food_neighbors = Vec::new();
         for (x, y, cell) in neighbors {
@@ -190,7 +189,7 @@ impl Organism for Carnivore {
         }
     }
 
-    fn reproduce(&mut self, mut grid: Vec<Vec<char>>) {
+    fn reproduce(&mut self, grid: &mut Vec<Vec<char>>) {
         let neighbors = self.get_neighbors(&grid);
         let mut empty_neighbors = Vec::new();
         for (x, y, cell) in neighbors {
