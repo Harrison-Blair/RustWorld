@@ -7,14 +7,14 @@ fn populate_grid(grid:&mut Vec<Vec<char>>, creatures:&mut Vec<Box<dyn organisms:
             let s: f32 = rand::random();
             if s > 0.9 {
                 let r: f32 = rand::random();
-                if r < 0.33 {
+                if r < 0.5 {
                     *cell = 'ϡ';
                 } else if r < 0.66 {
                     *cell = 'Δ';
-                    creatures.push(Box::new(organisms::Carnivore{symbol: *cell, position: (x, y)}));
+                    creatures.push(Box::new(organisms::Carnivore{symbol: *cell, position: (x, y), has_reproduced: false}));
                 } else {
                     *cell = 'Π';
-                    creatures.push(Box::new(organisms::Herbavore{symbol: *cell, position: (x, y)}));
+                    creatures.push(Box::new(organisms::Herbavore{symbol: *cell, position: (x, y), has_reproduced: false}));
                 }
             }
         }
@@ -58,11 +58,31 @@ fn main() {
 
     let mut iterations = 0;
 
-    while iterations < 9000 {
-        std::thread::sleep(std::time::Duration::from_millis(1000));
+    while iterations < 1000000 {
+        let mut offspring: Vec<(usize, usize, char)> = Vec::new();
+        let mut removals: Vec<(usize, usize)> = Vec::new();
+        std::thread::sleep(std::time::Duration::from_millis(200));
         for creature in creatures.iter_mut() {
-            creature.do_turn(&mut grid);
+            let position = creature.get_position();
+            if grid[position.0][position.1] == ' ' {
+                removals.push(position);
+                continue;
+            }
+
+            let mut children = creature.do_turn(&mut grid);
+            offspring.append(&mut children);
         }
+        for (x, y, t) in offspring {
+            if t == 'Δ' {
+                creatures.push(Box::new(organisms::Carnivore{symbol: t, position: (x, y), has_reproduced: false}));
+            } else {
+                creatures.push(Box::new(organisms::Herbavore{symbol: t, position: (x, y), has_reproduced: false}));
+            }
+        }
+        for (x, y) in removals {
+            creatures.retain(|c| c.get_position() != (x, y));
+        }
+        
         print_grid(&grid);
         iterations += 1;
     }
