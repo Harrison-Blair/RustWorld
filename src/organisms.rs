@@ -90,6 +90,13 @@ pub trait Organism {
 
 }
 
+
+impl Herbavore {
+    fn moo(&self) {
+        println!("Moo!");
+    }
+}
+
 impl Organism for Herbavore {
     fn get_symbol(&self) -> char {
         self.symbol
@@ -130,6 +137,7 @@ impl Organism for Herbavore {
             self.has_reproduced = true;
         } else if rng < 0.45 && can_eat {
             self.eat(grid);
+            self.moo();
         } else if can_move {
             self.move_to_empty(grid);
         }
