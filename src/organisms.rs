@@ -10,6 +10,7 @@ pub struct Carnivore {
     pub symbol: char,
     pub position: (usize, usize),
     pub has_reproduced: bool,
+    pub energy: i32,
 }
 
 pub trait Organism {
@@ -85,9 +86,10 @@ impl Organism for Herbavore {
         let rng = rand::thread_rng().gen_range(0.0..=1.0);
         if rng < 0.01 && can_reproduce && can_move && self.has_reproduced == false {
             offspring = self.reproduce(grid);
+            self.has_reproduced = true;
         } else if rng < 0.45 && can_eat {
             self.eat(grid);
-        } else if rng < 1.0 && can_move {
+        } else if can_move {
             self.move_to_empty(grid);
         }
         offspring
@@ -140,6 +142,11 @@ impl Organism for Carnivore {
         let mut can_reproduce = false;
         let mut offspring = Vec::new();
 
+        if self.energy <= 0 {
+            grid[self.position.0][self.position.1] = ' ';
+            return offspring;
+        }
+
         for cell in neighbors {
             if cell.2 == ' ' {
                 can_move = true;
@@ -153,10 +160,14 @@ impl Organism for Carnivore {
         let rng = rand::thread_rng().gen_range(0.0..=1.0);
         if rng < 0.01 && can_reproduce && can_move && self.has_reproduced == false {
             offspring = self.reproduce(grid);
+            self.has_reproduced = true;
+            self.energy -= 5;
         } else if rng < 0.45 && can_eat {
             self.eat(grid);
-        } else if rng < 1.0 && can_move {
+            self.energy += 50;
+        } else if can_move {
             self.move_to_empty(grid);
+            self.energy -= 1;
         }
         offspring
     }
