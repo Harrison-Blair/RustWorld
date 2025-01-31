@@ -45,6 +45,7 @@ Implimented Functions
 - `set_position` <- Deal with member data
 - `get_food` <- Deal with member data
 - `do_turn` <- Cannot be genericized due to differences in Herbavores and Carnivores
+- `moo` <- make a noise, not included in the `Organisms` class
 
 #### Carnivore
 `Carnivores` have a special characteristic called `Energy`. `Carnivores` spawn with a limited amount of `energy`, and must eat to increase their `energy`. `Energy` is expended when `moving` or `reproducing`, and in the event a `Carnivore` runs out of `energy` they are removed from the grid and list of creatures. `Carnivores` eat `Herbavores`.
