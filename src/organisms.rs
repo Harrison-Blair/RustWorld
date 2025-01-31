@@ -21,6 +21,24 @@ pub trait Organism {
 
     fn do_turn(&mut self, grid: &mut Vec<Vec<char>>) -> Vec<(usize, usize, char)>;
 
+    fn get_neighbors(&self, grid: &Vec<Vec<char>>) -> Vec<(usize, usize, char)> {
+        let mut neighbors = Vec::new();
+        let (x, y) = self.get_position();
+            if x > 0 {
+                neighbors.push((x - 1, y, grid[x - 1][y]));
+            }
+            if x < grid.len() - 1 {
+                neighbors.push((x + 1, y, grid[x + 1][y]));
+            }
+            if y > 0 {
+                neighbors.push((x, y - 1, grid[x][y - 1]));
+            }
+            if y < grid[0].len() - 1 {
+                neighbors.push((x, y + 1, grid[x][y + 1]));
+            }
+        neighbors
+    }
+
     fn move_to_empty(&mut self, grid: &mut Vec<Vec<char>>) {
         let neighbors = self.get_neighbors(&grid);
         let mut empty_neighbors = Vec::new();
@@ -69,23 +87,7 @@ pub trait Organism {
         offspring
     }
 
-    fn get_neighbors(&self, grid: &Vec<Vec<char>>) -> Vec<(usize, usize, char)> {
-        let mut neighbors = Vec::new();
-        let (x, y) = self.get_position();
-            if x > 0 {
-                neighbors.push((x - 1, y, grid[x - 1][y]));
-            }
-            if x < grid.len() - 1 {
-                neighbors.push((x + 1, y, grid[x + 1][y]));
-            }
-            if y > 0 {
-                neighbors.push((x, y - 1, grid[x][y - 1]));
-            }
-            if y < grid[0].len() - 1 {
-                neighbors.push((x, y + 1, grid[x][y + 1]));
-            }
-        neighbors
-    }
+
 }
 
 impl Organism for Herbavore {
