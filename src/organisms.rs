@@ -16,11 +16,42 @@ pub struct Carnivore {
 pub trait Organism {
     fn get_symbol(&self) -> char;
     fn get_position(&self) -> (usize, usize);
+    fn set_position(&mut self, x: usize, y: usize);
+    fn get_food(&self) -> char;
 
     fn do_turn(&mut self, grid: &mut Vec<Vec<char>>) -> Vec<(usize, usize, char)>;
 
-    fn move_to_empty(&mut self, grid: &mut Vec<Vec<char>>);
-    fn eat(&mut self, grid: &mut Vec<Vec<char>>);
+    fn move_to_empty(&mut self, grid: &mut Vec<Vec<char>>) {
+        let neighbors = self.get_neighbors(&grid);
+        let mut empty_neighbors = Vec::new();
+        for (x, y, cell) in neighbors {
+            if cell == ' ' {
+                empty_neighbors.push((x, y));
+            }
+        }
+        let position = self.get_position();
+
+        if let Some(&(dx, dy)) = empty_neighbors.choose(&mut rand::thread_rng()) {
+            grid[position.0][position.1] = ' ';
+            grid[dx][dy] = self.get_symbol();
+            self.set_position(dx, dy);
+        }
+    }
+
+    fn eat(&mut self, grid: &mut Vec<Vec<char>>) {
+        let neighbors = self.get_neighbors(&grid);
+        let mut food_neighbors = Vec::new();
+        for (x, y, cell) in neighbors {
+            if cell == self.get_food() {
+                food_neighbors.push((x, y));
+            }
+        }
+
+        if let Some(&(dx, dy)) = food_neighbors.choose(&mut rand::thread_rng()) {
+            grid[dx][dy] = ' ';
+        }
+    }
+
     fn reproduce(&mut self, grid: &mut Vec<Vec<char>>) -> Vec<(usize, usize, char)> {
         let mut offspring = Vec::new();
         let neighbors = self.get_neighbors(&grid);
@@ -66,6 +97,14 @@ impl Organism for Herbavore {
         self.position
     }
 
+    fn set_position(&mut self, x: usize, y: usize) {
+        self.position = (x, y);
+    }
+
+    fn get_food(&self) -> char {
+        'ϡ'
+    }
+
     fn do_turn(&mut self, grid: &mut Vec<Vec<char>>) -> Vec<(usize, usize, char)> {
         let neighbors = self.get_neighbors(&grid);
         let mut can_move = false;
@@ -95,35 +134,6 @@ impl Organism for Herbavore {
         offspring
     }
 
-    fn move_to_empty(&mut self, grid: &mut Vec<Vec<char>>) {
-        let neighbors = self.get_neighbors(&grid);
-        let mut empty_neighbors = Vec::new();
-        for (x, y, cell) in neighbors {
-            if cell == ' ' {
-                empty_neighbors.push((x, y));
-            }
-        }
-                
-        if let Some(&(dx, dy)) = empty_neighbors.choose(&mut rand::thread_rng()) {
-            grid[self.position.0][self.position.1] = ' ';
-            grid[dx][dy] = self.symbol;
-            self.position = (dx, dy);
-        }
-    }
-
-    fn eat(&mut self, grid: &mut Vec<Vec<char>>) {
-        let neighbors = self.get_neighbors(&grid);
-        let mut food_neighbors = Vec::new();
-        for (x, y, cell) in neighbors {
-            if cell == 'ϡ' {
-                food_neighbors.push((x, y));
-            }
-        }
-
-        if let Some(&(dx, dy)) = food_neighbors.choose(&mut rand::thread_rng()) {
-            grid[dx][dy] = ' ';
-        }
-    }
 }
 
 impl Organism for Carnivore {
@@ -133,6 +143,14 @@ impl Organism for Carnivore {
 
     fn get_position(&self) -> (usize, usize) {
         self.position
+    }
+
+    fn set_position(&mut self, x: usize, y: usize) {
+        self.position = (x, y);
+    }
+
+    fn get_food(&self) -> char {
+        'Π'
     }
 
     fn do_turn(&mut self, grid: &mut Vec<Vec<char>>) -> Vec<(usize, usize, char)> {
@@ -172,33 +190,4 @@ impl Organism for Carnivore {
         offspring
     }
 
-    fn move_to_empty(&mut self, grid: &mut Vec<Vec<char>>) {
-        let neighbors = self.get_neighbors(&grid);
-        let mut empty_neighbors = Vec::new();
-        for (x, y, cell) in neighbors {
-            if cell == ' ' {
-                empty_neighbors.push((x, y));
-            }
-        }
-                
-        if let Some(&(dx, dy)) = empty_neighbors.choose(&mut rand::thread_rng()) {
-            grid[self.position.0][self.position.1] = ' ';
-            grid[dx][dy] = self.symbol;
-            self.position = (dx, dy);
-        }
-    }
-
-    fn eat(&mut self, grid: &mut Vec<Vec<char>>) {
-        let neighbors = self.get_neighbors(&grid);
-        let mut food_neighbors = Vec::new();
-        for (x, y, cell) in neighbors {
-            if cell == 'Π' {
-                food_neighbors.push((x, y));
-            }
-        }
-
-        if let Some(&(dx, dy)) = food_neighbors.choose(&mut rand::thread_rng()) {
-            grid[dx][dy] = ' ';
-        }
-    }
 }
