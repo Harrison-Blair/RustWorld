@@ -6,6 +6,12 @@ pub struct Herbavore {
     pub has_reproduced: bool,
 }
 
+impl Herbavore {
+    fn moo(&self) {
+        println!("Moo!");
+    }
+}
+
 pub struct Carnivore {
     pub symbol: char,
     pub position: (usize, usize),
@@ -88,13 +94,6 @@ pub trait Organism {
     }
 
 
-}
-
-
-impl Herbavore {
-    fn moo(&self) {
-        println!("Moo!");
-    }
 }
 
 impl Organism for Herbavore {
