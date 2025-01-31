@@ -182,7 +182,7 @@ impl Organism for Carnivore {
             self.energy -= 5;
         } else if rng < 0.45 && can_eat {
             self.eat(grid);
-            self.energy += 50;
+            self.energy += 150;
         } else if can_move {
             self.move_to_empty(grid);
             self.energy -= 1;

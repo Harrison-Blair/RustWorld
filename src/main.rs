@@ -16,7 +16,7 @@ fn pass_time(creatures: &mut Vec<Box<dyn organisms::Organism>>, grid: &mut Vec<V
     }
     for (x, y, t) in offspring {
         if t == 'Δ' {
-            creatures.push(Box::new(organisms::Carnivore{symbol: t, position: (x, y), has_reproduced: false, energy: 75}));
+            creatures.push(Box::new(organisms::Carnivore{symbol: t, position: (x, y), has_reproduced: false, energy: 175}));
         } else {
             creatures.push(Box::new(organisms::Herbavore{symbol: t, position: (x, y), has_reproduced: false}));
         }
@@ -37,7 +37,7 @@ fn populate_grid(grid:&mut Vec<Vec<char>>, creatures:&mut Vec<Box<dyn organisms:
                     *cell = 'ϡ';
                 } else if r < 0.75 {
                     *cell = 'Δ';
-                    creatures.push(Box::new(organisms::Carnivore{symbol: 'Δ', position: (x, y), has_reproduced: false, energy: 75}));
+                    creatures.push(Box::new(organisms::Carnivore{symbol: 'Δ', position: (x, y), has_reproduced: false, energy: 175}));
                 } else {
                     *cell = 'Π';
                     creatures.push(Box::new(organisms::Herbavore{symbol: 'Π', position: (x, y), has_reproduced: false}));
